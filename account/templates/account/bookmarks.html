@@ -1,0 +1,311 @@
+{% extends "base.html" %}
+{% load humanize %}
+{% block content %}
+<style media="screen">
+
+
+  body {
+        background-color: #eeeeee;
+    }
+
+    .h7 {
+        font-size: 0.8rem;
+    }
+
+    .gedf-wrapper {
+        margin-top: 0.97rem;
+    }
+
+    @media (min-width: 992px) {
+        .gedf-main {
+            padding-left: 3rem;
+            padding-right: 4rem;
+        }
+        .gedf-card {
+            margin-bottom: 2.0rem;
+        }
+    }
+
+    /**Reset Bootstrap*/
+    .dropdown-toggle::after {
+        content: none;
+        display: none;
+    }
+  a{
+    color:#858796;
+    cursor:pointer;
+  }
+  a:hover{
+    text-decoration: none;
+    color: #224abe;
+
+  }
+  .gedf-card {
+      margin-bottom: 2.0rem;
+  }
+
+
+  .avatar{
+  height: 3.125rem;
+  min-height: 3.125rem;
+  width: 3.125rem;
+  min-width: 3.125rem;
+  background: #2f2a30;
+  display: inline-block;
+  position: relative;
+  line-height: 0;
+  }
+  .avatar>i, .avatar>span{
+    display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  }
+  .icon-md{
+    font-size: 1.1875rem!important;
+  }
+  .position-relative{
+  position: relative!important;
+  }
+
+  .display-none{
+    display:none
+  }
+
+  .hover:hover{
+    color: #4e73df;
+  }
+</style>
+<div class="container-fluid gedf-wrapper">
+    <div class="row">
+        <div class="col-md-8 gedf-main">
+          {% if bookmarks %}
+          <div class="infinite-container">
+          {% for post in bookmarks %}
+          <div class="card gedf-card infinite-item">
+            <script type="text/javascript">
+            </script>
+              <div class="card-header">
+                  <div class="d-flex justify-content-between align-items-center">
+                      <div class="d-flex justify-content-between align-items-center">
+                          <div class="mr-2">
+                            <a href="{{ post.user.get_profile_url }}">  <img class="rounded-circle" style="height:48px; width:48px" src="{{ post.user.profile_img.url }}" alt=""></a>
+                          </div>
+                          <div class="ml-2">
+                            <a href="{{ post.user.get_profile_url }}"><div class="h6 m-0">{{ post.user.username }}</div></a>
+                            {% if post.is_public %}
+                              <i class="fas fa-globe-americas mr-2"></i>
+                            {% elif post.is_private %}
+                              <i class="fa fa-user mr-2"></i>
+                            {% else %}
+                              <i class="fa fa-users mr-2"></i>
+                            {% endif %}
+                            <span class="text-muted h7"><i class="fa fa-clock-o"></i>{{ post.published_date|naturaltime }}</span>
+                          </div>
+                      </div>
+                      <div>
+                          <div class="dropdown">
+                            {% if post not in account.bookmark.posts.all %}
+                                <a id="bookmark-{{ post.id }}" href="javascript:void(0)"><i onclick="addToBookmark('{{ post.id }}')" class="far fa-bookmark"></i></a>
+                              {% else %}
+                                  <a id="bookmark-{{ post.id }}" href="javascript:void(0)"><i onclick="removeFromBookmark('{{ post.id }}')" class="fas fa-bookmark"></i></a>
+                            {% endif %}
+
+                              <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  <i class="fa fa-ellipsis-h"></i>
+                              </button>
+
+                              <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                                  <div class="h6 dropdown-header">Settings</div>
+                                  {% if post.user == request.user %}<a class="dropdown-item" href="{% url 'posts:delete' post.id%}">Delete</a>{% endif %}
+                                  {% if post.user == request.user %}<a class="dropdown-item" href="{% url 'posts:update' post.id%}">Update</a>{% endif %}
+                                  <a href="javascript:void(0)"><button class="dropdown-item" id="copypostlink" onclick="CopyPostLink('{{ post.id }}')">Copy link</button></a>
+                                  <div class="d-none" id="link-post-{{ post.id }}">{{ post.get_path }}</div>
+                                  <a class="dropdown-item" href="#">Report</a>
+
+                              </div>
+
+                          </div>
+                      </div>
+
+                  </div>
+
+              </div>
+              <div class="card-body">
+
+
+                  <p class="card-text">
+                      {{ post.description }}
+                  </p>
+
+
+              </div>
+              {% if post.image %}
+              <div class="cardbox-item img-fit">
+                <img class="img-fluid img-fit" src="{{ post.image.url }}" alt="Image">
+              </div>
+              {% endif %}
+              <div class="cardbox-base">
+
+                <ul>
+
+                  {% for user in post.likes.all %}
+                    {% if forloop.counter <= 4 %}
+                    <li><a href="{{ user.get_profile_url }}"><img title="{{ user.username }}" src="{{ user.profile_img.url }}" class="img-fluid rounded-circle" ></a></li>
+                    {% endif %}
+                  {% endfor %}
+                 <li><a><span data-toggle="tooltip" title="{% for user in post.likes.all %}
+                   {{ user.username }}
+                 {% endfor %}" data-placement="right"><div class="d-inline" id="likesCount-{{post.id}}">{{ post.likes.values|length }}</div> Lik{{ post.likes.values|pluralize:"e,es" }}</span></a></li>
+                 <li><a><span data-toggle="tooltip" title="{% for comment in post.comments.all %}
+                   {{ comment.user.username }}
+                 {% endfor %}" data-placement="right">{{ post.comments.all|length }} Commen{{ post.comments.all|length|pluralize:"t,ts" }}</span></a></li>
+                 <li class="text-muted"><a ><span data-toggle="tooltip" title="{% for share in post.shares.all %}
+                   {{ share.user.username }}
+                 {% endfor %}" data-placement="right" class="text-muted">{{ post.shares.all|length }} Share{{ post.shares.all|pluralize }}</span></a></li>
+                </ul>
+
+               </div><!--/ cardbox-base -->
+              <div class="card-footer">
+                <div class="like-{{post.id}} d-inline card-link">
+                  {% if account in post.likes.all %}
+                  <a href="javascript:void(0)" onclick='triggerUnLike("{{post.id}}")' class="card-link text-primary"><i class="fa fa-gittip"></i>
+                    <i class="fa fa-thumbs-up"></i>
+                    Liked
+                  </a>
+                  {% else %}
+                    <a href="javascript:void(0)" onclick='triggerLike("{{post.id}}")' class="card-link"><i class="fa fa-gittip"></i>
+                      <i class="fa fa-thumbs-up"></i>
+                      Like
+                    </a>
+                  {% endif %}
+                </div>
+                <a href="javascript:void(0)" class="card-link"><i class="fa fa-comment"></i> Comment</a>
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#sharepost-{{ post.id }}" class="card-link text-right"><i class="fa fa-mail-forward"></i><i class="fa fa-share-alt"></i> Share</a>
+                <div class="modal fade" id="sharepost-{{ post.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Share Post</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <form action="{% url 'posts:share_post' post.id %}" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="modal-body">
+                        <textarea class="form-control"  rows="3" name="quote" placeholder="Say something about this.."></textarea>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                          <button type="submit" class="btn btn-primary">Share</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="comments">
+                {% with post.comments.all as comments %}
+                  <div class="container">
+                    <div class="row">
+                      <div class="col-12 mt-3" id="commentsSection-{{ post.id }}">
+
+                          {% for comment in comments|slice:":4" %}
+
+                              <div class="d-flex flex-row mb-2"> <img src="{{ comment.user.profile_img.url }}" width="40" class="rounded-image">
+                                  <div class="d-flex flex-column ml-2"> <a href="{{ comment.user.get_profile_url }}"><span class="name">{{ comment.user.username }}</span></a> <strong class="comment-text">{{ comment.comment }}</strong>
+                                      <div class="d-flex flex-row align-items-center status">
+                                        <div id="like-comment-area-{{ comment.id }}">
+                                          <small>
+                                          {% if account in comment.comment_likes.all %}
+                                                <a href="javascript:void(0)" onclick='triggerUnLikeComment("{{comment.id}}")' class="card-link text-primary">
+                                                Liked
+                                                </a>
+                                          {% else %}
+                                              <a href="javascript:void(0)" onclick='triggerLikeComment("{{comment.id}}")' class="card-link">
+                                                Like
+                                              </a>
+                                          {% endif %}
+                                          </small>
+                                        </div>
+                                        <div>
+                                          <small class="text-muted">{{ comment.created|naturaltime }}</small>
+                                          <small>
+                                            <span id="comment-likes-{{ comment.id }}">{{ comment.comment_likes.all|length }}</span>
+                                            <i class="fas fa-heart text-danger"></i>
+                                          </small>
+                                        </div>
+                                      </div>
+                                  </div>
+                              </div>
+
+                          {% endfor %}
+                      </div>
+                    </div>
+                    {% if comments|length >= 3 %}
+
+
+                      <div class="mt-1 mb-1">
+                        <a onclick="LoadMore({{ post.id }})">load more comments...</a>
+                        <div id="spinnerBox-{{ post.id }}" class="mt-1 mb-1 spinner-border text-primary spinner-border-sm display-none" role="status"></div>
+                      </div>
+                    {% endif %}
+                  </div>
+                  {% endwith %}
+
+                  <div class="comment-input"> <input type="text" id="comment-{{ post.id }}" class="form-control" placeholder="Write a comment...">
+                      <div class="fonts"> <a onclick='triggerComment("{{post.id}}","{{ user.username }}","{{ user.profile_img.url }}")'><i class="fas fa-paper-plane"></i></a></div>
+                  </div>
+              </div>
+          </div>
+
+        {% endfor %}
+        </div>
+        {% else %}
+        <div class="card text-center">
+          <div class="card-body">
+            <h5 class="card-title text-gray-800">Bookmarks is empty</h5>
+            <p class="card-text">Your saved posts will appear here.</p>
+            <a href="{% url 'home' %}" class="btn btn-primary"><i class="fas fa-angle-left"></i> Timeline</a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+  </div>
+</div>
+{% if bookmarks.has_next%}
+  <a href="?page={{ bookmarks.next_page_number }}" class="btn btn-outline-light mt-4 mb-4 infinite-more-link">Next</a>
+{% endif %}
+
+<script>
+
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container'),
+    offset: 'bottom-in-view',
+
+    onBeforePageLoad: function () {
+      $('#spinnerBox').show();
+      $('[data-toggle="popover"]').popover()
+      $('[data-toggle="tooltip"]').tooltip()
+    },
+
+   onAfterPageLoad: function () {
+      $('#spinnerBox').hide();
+      $('[data-toggle="popover"]').popover()
+      $('[data-toggle="tooltip"]').tooltip()
+   }
+
+  });
+
+</script>
+{% include "snippets/baseJs.html" %}
+{% endblock %}

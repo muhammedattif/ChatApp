@@ -1,0 +1,365 @@
+<script type="text/javascript">
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
+  $('.toast').toast('show');
+
+
+  function CopyPostLink(post_id)  {
+    console.log(post_id)
+      str = document.getElementById("link-post-"+post_id).innerHTML;
+      const el = document.createElement('textarea');
+      el.value = window.location.hostname + ':8000' + str;
+      document.body.appendChild(el);
+      el.select();
+      document.execCommand('copy');
+      document.body.removeChild(el);
+  };
+
+  function CopyPostLinkk(post_id) {
+    if (document.selection) {
+      var range = document.body.createTextRange();
+      range.moveToElementText(document.getElementById(post_id));
+      range.select().createTextRange();
+      document.execCommand("copy");
+    } else if (window.getSelection) {
+      var range = document.createRange();
+      range.selectNode(document.getElementById(post_id));
+      window.getSelection().addRange(range);
+      document.execCommand("copy");
+      alert("Text has been copied, now paste in the text-area")
+    }
+  }
+
+  var image_area = document.getElementById('image_area')
+
+  image_area.style.display = "none"
+  function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+              var image = e.target.result
+              var image_area = document.getElementById('image_area')
+              var image_info = document.getElementById('image_info')
+              var imageField = document.getElementById('id_profile_image_display')
+                imageField.src = image
+                image_area.style.display = "block"
+                image_info.style.display = "none"
+
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
+
+
+    function oncommentFunction(){
+      location.reload();
+    }
+
+    function triggerComment(post_id, username, img){
+      CommentPost(post_id, username, img, oncommentFunction)
+    }
+
+    function CommentPost(post_id, username, img, oncommentFunction){
+
+      var commentsection = document.getElementById("commentsSection-"+post_id)
+      var comment = document.getElementById("comment-"+post_id)
+      var content ='<div class="d-flex flex-row mb-2"> <img src="'+img+'" width="40" class="rounded-image"><div class="d-flex flex-column ml-2"> <span class="name">'+username+'</span> <strong class="comment-text">'+comment.value+'</strong><div class="d-flex flex-row align-items-center status"> <small>Just now</small> </div></div></div>'
+
+      payload = {
+        "csrfmiddlewaretoken": "{{csrf_token}}",
+        "post_id": post_id,
+        "comment": comment.value
+      }
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: '{% url 'posts:add_comment' %}',
+        timeout: 5000,
+        data: payload,
+        success: function(data){
+          if(data['response'] == "success"){
+            commentsection.innerHTML += content
+            comment.value = ""
+
+          }
+          else if(data['response'] == "error"){
+            //error
+            console.log("err")
+          }
+        },
+        error: function(data){
+          alert("Something went wrong.")
+        },
+        complete: function(data){
+
+        },
+      });
+    }
+
+    function triggerLikeComment(comment_id){
+      LikeComment(comment_id)
+    }
+
+
+    function LikeComment(comment_id){
+      var commentlikesCount = document.getElementById("comment-likes-"+comment_id)
+      var content ='<small><a href="javascript:void(0)" onclick="triggerUnLikeComment('+comment_id+')" class="card-link text-primary">Liked</a></small>'
+      payload = {
+        "csrfmiddlewaretoken": "{{csrf_token}}",
+        "comment_id": comment_id,
+      }
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: '{% url 'posts:like_comment' %}',
+        timeout: 5000,
+        data: payload,
+        success: function(data){
+          if(data['response'] == "success"){
+            commentlikesCount.textContent = parseInt(commentlikesCount.textContent) + 1
+            $('#like-comment-area-'+comment_id).html(content)
+
+          }
+          else if(data['response'] == "error"){
+            //error
+            console.log("err")
+          }
+        },
+        error: function(data){
+          alert("Something went wrong.")
+        },
+        complete: function(data){
+
+        },
+      });
+    }
+
+
+    function triggerUnLikeComment(comment_id){
+      UnLikeComment(comment_id)
+    }
+
+
+    function UnLikeComment(comment_id){
+      var commentlikesCount = document.getElementById("comment-likes-"+comment_id)
+      var content ='<small><a href="javascript:void(0)" onclick="triggerLikeComment('+comment_id+')" class="card-link">Like</a></small>'
+      payload = {
+        "csrfmiddlewaretoken": "{{csrf_token}}",
+        "comment_id": comment_id,
+      }
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: '{% url 'posts:unlike_comment' %}',
+        timeout: 5000,
+        data: payload,
+        success: function(data){
+          if(data['response'] == "success"){
+            commentlikesCount.textContent = parseInt(commentlikesCount.textContent) - 1
+            $('#like-comment-area-'+comment_id).html(content)
+
+          }
+          else if(data['response'] == "error"){
+            //error
+            console.log("err")
+          }
+        },
+        error: function(data){
+          alert("Something went wrong.")
+        },
+        complete: function(data){
+
+        },
+      });
+    }
+
+
+    function onlikeFunction(){
+      location.reload();
+    }
+
+    function triggerLike(post_id){
+      LikePost(post_id, onlikeFunction)
+    }
+
+
+    function LikePost(post_id, onlikeFunction){
+      var likesCount = document.getElementById("likesCount-"+post_id)
+      var content ='<a href="javascript:void(0)" onclick="triggerUnLike('+post_id+')" class="card-link text-primary"><i class="fa fa-gittip"></i><i class="fa fa-thumbs-up"></i> Liked</a>'
+      payload = {
+        "csrfmiddlewaretoken": "{{csrf_token}}",
+        "post_id": post_id,
+      }
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: '{% url 'posts:like_post' %}',
+        timeout: 5000,
+        data: payload,
+        success: function(data){
+          if(data['response'] == "success"){
+            likesCount.textContent = parseInt(likesCount.textContent) + 1
+            $('.like-'+post_id).html(content)
+          }
+          else if(data['response'] == "error"){
+            //error
+            console.log("err")
+          }
+        },
+        error: function(data){
+          alert("Something went wrong.")
+        },
+        complete: function(data){
+
+        },
+      });
+    }
+
+    function onunlikeFunction(){
+      location.reload();
+    }
+
+    function triggerUnLike(post_id){
+      UnLikePost(post_id, onunlikeFunction)
+    }
+
+
+    function UnLikePost(post_id, onlikeFunction){
+      var content = '<a href="javascript:void(0)" onclick="triggerLike('+post_id+')" class="card-link"><i class="fa fa-gittip"></i><i class="fa fa-thumbs-up"></i> Like</a>'
+      var likesCount = document.getElementById("likesCount-"+post_id)
+
+      payload = {
+        "csrfmiddlewaretoken": "{{csrf_token}}",
+        "post_id": post_id,
+      }
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: '{% url 'posts:unlike_post' %}',
+        timeout: 5000,
+        data: payload,
+        success: function(data){
+          if(data['response'] == "success"){
+            likesCount.textContent = parseInt(likesCount.textContent) - 1
+            $('.like-'+post_id).html(content)
+          }
+          else if(data['response'] == "error"){
+            //error
+            console.log("err")
+          }
+        },
+        error: function(data){
+          alert("Something went wrong.")
+        },
+        complete: function(data){
+
+        },
+      });
+    };
+
+    // load more comments
+    let visible = 3
+
+
+
+    function LoadMore(post_id){
+      var spinnerBox = document.getElementById("spinnerBox-"+post_id)
+      var commentsection = document.getElementById("commentsSection-"+post_id)
+      visible += 3
+      $.ajax({
+        type: "GET",
+        url: `/posts/comments-json/${post_id}/${visible}`,
+        timeout: 5000,
+
+        success: function(response){
+          spinnerBox.style.display = "inline-block"
+          setTimeout(function(){
+             spinnerBox.style.display = "none"
+           }, 500);
+
+          const data = response.data
+          data.map(comment=>{
+            console.log(comment)
+          }
+          )
+        },
+        error: function(data){
+          console.log(data)
+          alert("Something went wrong.")
+        },
+        complete: function(data){
+
+        },
+      });
+    };
+
+    function addToBookmark(post_id){
+      var bookmark = $("#bookmark-"+post_id)
+      var content = '<i onclick="removeFromBookmark('+post_id+')" class="fas fa-bookmark"></i></a>'
+      payload = {
+        "csrfmiddlewaretoken": "{{csrf_token}}",
+        "post_id": post_id,
+      }
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: '{% url 'posts:add_to_bookmark' %}',
+        timeout: 5000,
+        data: payload,
+        success: function(data){
+          if(data['response'] == 'True'){
+
+            bookmark.html(content)
+          }
+          else if(data['response'] == "error"){
+            //error
+            console.log("err")
+          }
+        },
+        error: function(data){
+          alert("Something went wrong.")
+        },
+        complete: function(data){
+
+        },
+      });
+    }
+
+    function removeFromBookmark(post_id){
+      var bookmark = $("#bookmark-"+post_id)
+      var content = '<i onclick="addToBookmark('+post_id+')" class="far fa-bookmark"></i></a>'
+      payload = {
+        "csrfmiddlewaretoken": "{{csrf_token}}",
+        "post_id": post_id,
+      }
+      $.ajax({
+        type: "POST",
+        dataType: "json",
+        url: '{% url 'posts:remove_from_bookmark' %}',
+        timeout: 5000,
+        data: payload,
+        success: function(data){
+          if(data['response'] == 'True'){
+
+            bookmark.html(content)
+          }
+          else if(data['response'] == "error"){
+            //error
+            console.log("err")
+          }
+        },
+        error: function(data){
+          alert("Something went wrong.")
+        },
+        complete: function(data){
+
+        },
+      });
+    }
+</script>

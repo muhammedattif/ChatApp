@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <style media="screen">
+
+    ::-webkit-scrollbar {
+      width: 5px;
+    }
+
+    ::-webkit-scrollbar-track {
+      width: 5px;
+      background: #f5f5f5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      width: 1em;
+      background-color: #ddd;
+      outline: 1px solid slategrey;
+      border-radius: 1rem;
+    }
+
+    .text-small {
+      font-size: 0.9rem;
+    }
+
+    .messages-box,
+    .chat-box {
+      height: 510px;
+      overflow-y: scroll;
+    }
+
+    .rounded-lg {
+      border-radius: 0.5rem;
+    }
+
+    input::placeholder {
+      font-size: 0.9rem;
+      color: #999;
+    }
+
+    .indicator.online {
+        background: #28B62C;
+        display: inline-block;
+        width: 0.8em;
+        height: 0.8em;
+        border-radius: 50%;
+        position: absolute;
+        top:65%;
+        left:12%;
+        -webkit-animation: pulse-animation 2s infinite linear;
+    }
+  </style>
+
+<div class="container py-5 px-4">
+
+
+  <div class="row rounded-lg overflow-hidden shadow">
+    <!-- Users box-->
+    <div class="col-5 px-0">
+      <div class="bg-white">
+
+        <div class="bg-gray px-4 py-2 bg-light">
+          <p class="h5 mb-0 py-1">Recent</p>
+        </div>
+
+        <div class="messages-box">
+          <div class="list-group rounded-0">
+
+            {% for friendUser in user.friends.all %}
+              <a href="{% url 'messenger' friendUser.user.username %}" class="{% if friendUser.user.username == friend.username %} active text-white {% else %}list-group-item-light{% endif %} list-group-item list-group-item-action  rounded-0">
+                <div class="media"><img src="{{ friendUser.user.profile_img.url }}" alt="user" width="50" class="rounded-circle">
+                  {% if friendUser.user.get_online_status %}
+                    <span class="indicator online indicator-position"></span>
+                  {% endif %}
+                  <div class="media-body ml-4">
+                    <div id="message-lable">
+                      <div class="d-flex align-items-center justify-content-between mb-1">
+                        <h6 class="mb-0">{{ friendUser.user.username }}</h6><small class="small font-weight-bold">{% if friendUser.user.username == friend.username %}{{ lastmessage.date_sent }}{% endif %}</small>
+                      </div>
+                      <p class="font-italic  mb-0 text-small">{% if friendUser.user.username == friend.username %}{{ lastmessage.text }}{% endif %}</p>
+                    </div>
+                    <!-- {% if lastmessage.sender.user == user %}
+                     You:{{ lastmessage.text }}
+                     {% else %}
+                     {{ lastmessage.sender.username }}: {{ lastmessage.text }}
+                    {% endif %} -->
+                  </div>
+                </div>
+              </a>
+            {% endfor %}
+
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Chat Box-->
+    <div class="col-7 px-0">
+      <div id="chatbox" class="px-4 py-5 chat-box bg-white">
+
+        {% with messages as chatmessages %}
+          {% if chatmessages %}
+            {% for message in chatmessages %}
+              {% if message.sender == user %}
+                <div class="media w-50 ml-auto mb-3">
+                  <div class="media-body">
+                    <div class="bg-primary rounded py-2 px-3 mb-2">
+                      <p class="text-small mb-0 text-white">{{ message.text }}</p>
+                    </div>
+                    <p class="small text-muted">{{ message.date_sent }}</p>
+                  </div>
+                </div>
+
+              {% else %}
+                <div class="media w-50 mb-3">
+                  <img src="{{ friend.profile_img.url }}" alt="user" width="50" class="rounded-circle">
+                  <div class="media-body ml-3">
+                    <div class="bg-light rounded py-2 px-3 mb-2">
+                      <p class="text-small mb-0 text-muted">{{ message.text }}</p>
+                    </div>
+                    <p class="small text-muted">{{ message.date_sent }}</p>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+            {% else %}
+            <div class="mb-4 text-center">
+              <h5 class="card-title text-gray-800">No Messages</h5>
+              <p class="card-text">New Messages will appear here.</p>
+            </div>
+          {% endif %}
+        {% endwith %}
+
+      </div>
+
+      <!-- Typing area -->
+      <div id="messageForm" class="bg-light">
+        <div class="input-group">
+          <input id="message" type="text" placeholder="Type a message" aria-describedby="button-addon2" class="form-control rounded-0 border-0 py-4 bg-light">
+          <div class="input-group-append">
+            <button id="sendMessageButton"  type="submit" class="btn btn-link"> <i class="fa fa-paper-plane"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script type="text/javascript">
+
+  function getDate(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var month = date.toLocaleString('default', { month: 'long' })
+    var day =  date.getDate();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm + ' | ' + month + ' ' + day;
+    return strTime;
+  }
+
+  const url = 'ws://' + window.location.host +'/ws/messenger/' + '{{ friend.username }}/';
+  console.log(url)
+  var $chat = $('#chatbox');
+  $chat.scrollTop($chat[0].scrollHeight);
+  const chatSocket = new WebSocket(url)
+
+  var $messagelable = $('#message-lable');
+  messagelable = '<div class="d-flex align-items-center justify-content-between mb-1"><h6 class="mb-0"></h6><small class="small font-weight-bold"></small></div><p class="font-italic  mb-0 text-small"></p>'
+
+  chatSocket.onopen = function(e) {
+    console.log(e);
+  };
+
+  chatSocket.onmessage = function(e) {
+     var data = JSON.parse(e.data);
+     var message = JSON.parse(data.message);
+     var text = message.text
+     var img = message.img
+     var username = message.username
+     var $chat = $('#chatbox');
+     var today = new Date();
+
+
+     if(username == '{{ request.user.username }}'){
+       sendedMessage = '<div class="media w-50 ml-auto mb-3"><div class="media-body"><div class="bg-primary rounded py-2 px-3 mb-2"><p class="text-small mb-0 text-white">'+text+'</p></div><p class="small text-muted">'+getDate(today)+'</p></div></div>'
+     }else{
+       sendedMessage = '<div class="media w-50 mb-3"><img src="'+img+'" alt="user" width="50" class="rounded-circle"><div class="media-body ml-3"><div class="bg-light rounded py-2 px-3 mb-2"><p class="text-small mb-0 text-muted">'+text+'</p></div><p class="small text-muted">'+getDate(today)+'</p></div></div>'
+     }
+     $chat.append(sendedMessage)
+     $messagelable.append(messagelable)
+     $chat.scrollTop($chat[0].scrollHeight);
+   };
+
+  chatSocket.onclose = function(e) {
+     console.error('Chat socket closed unexpectedly');
+  };
+
+
+
+
+  var $input = $('#message')
+  var $sendMessageButton = $('#sendMessageButton');
+
+  $sendMessageButton.click(function() {
+
+    var message = $input.val()
+    var $chat = $('#chatbox');
+    if(message){
+      chatSocket.send(JSON.stringify({'message': message}));
+
+      $input.val('')
+      $input.focus();
+      $chat.scrollTop($chat[0].scrollHeight);
+    }
+  });
+
+
+  $input.focus();
+  $input.keyup(function(e) {
+   if (e.which === 13) {
+     // submit with enter / return key
+     $sendMessageButton.click();
+   }
+  });
+
+</script>
+
+{% endblock %}
+<!--
+ws.onmessage = function(event){
+  var chatbox = $('#chatbox')
+  sendedMessage = '<div class="media w-50 mb-3"><img src="https://res.cloudinary.com/mhmd/image/upload/v1564960395/avatar_usae7z.svg" alt="user" width="50" class="rounded-circle"><div class="media-body ml-3"><div class="bg-light rounded py-2 px-3 mb-2"><p class="text-small mb-0 text-muted">'+event.data+'</p></div><p class="small text-muted">12:00 PM | Aug 13</p></div></div>'
+  chatbox.append(sendedMessage)
+  console.log(event);
+  console.log('massage received');
+}
+
+ws.onclose = function(event){
+
+  console.log(event.data);
+}
+
+ws.onerror = function(event){
+  console.log('error');
+} -->

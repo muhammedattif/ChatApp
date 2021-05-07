@@ -1,0 +1,935 @@
+{% extends "base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+
+
+<style media="screen">
+  body {
+            background-color: #eeeeee;
+        }
+
+        .h7 {
+            font-size: 0.8rem;
+        }
+
+        .gedf-wrapper {
+            margin-top: 0.97rem;
+        }
+
+        @media (min-width: 992px) {
+            .gedf-main {
+                padding-left: 3rem;
+                padding-right: 4rem;
+            }
+            .gedf-card {
+                margin-bottom: 2.0rem;
+            }
+        }
+
+        /**Reset Bootstrap*/
+        .dropdown-toggle::after {
+            content: none;
+            display: none;
+        }
+.xxx{
+  display: block;
+  position: relative;
+  margin: auto;
+  top: 50px;
+  left: ;
+  right: ;
+  bottom: ;
+}
+.xxxx{
+
+  margin-top:6%;
+
+
+}
+.rela-block {
+  display: block;
+  position: relative;
+  margin: auto;
+  top: ;
+  left: ;
+  right: ;
+  bottom: ;
+  border-radius:4px
+
+}
+.rela-inline {
+  display: inline-block;
+  position: relative;
+  margin: auto;
+  top: ;
+  left: ;
+  right: ;
+  bottom: ;
+}
+.floated {
+  display: inline-block;
+  position: relative;
+  margin: false;
+  top: ;
+  left: ;
+  right: ;
+  bottom: ;
+  float: left;
+}
+.floated.right {
+  float: right;
+}
+.abs-center {
+  display: false;
+  position: absolute;
+  margin: false;
+  top: 50%;
+  left: 50%;
+  right: false;
+  bottom: false;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  text-align: center;
+  width: 88%;
+}
+.vert-center {
+  display: false;
+  position: absolute;
+  margin: false;
+  top: 50%;
+  left: ;
+  right: ;
+  bottom: ;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.profile-card {
+  width: calc(100% - 40px);
+  padding-top: 100px;
+  margin: 70px auto 30px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px -2px rgba(0,0,0,0.26);
+}
+.profile-pic {
+  display: false;
+  position: absolute;
+  margin: false;
+  top: -90px;
+  left: 50%;
+  right: false;
+  bottom: false;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  height: 180px;
+  width: 180px;
+  border: 10px solid #fff;
+  border-radius: 100%;
+  background: url({{ profile_img.url }}) center no-repeat;
+  background-size: cover;
+}
+.profile-name-container {
+  margin: 0 auto 10px;
+  padding: 10px;
+  text-align: center;
+}
+.user-name {
+  font-size: 24px;
+  letter-spacing: 3px;
+  font-weight: 400;
+  line-height: 30px;
+  margin-bottom: 12px;
+}
+.user-desc {
+  letter-spacing: 1px;
+  color: #999;
+}
+.profile-card-stats {
+  height: 75px;
+  padding: 10px 0px;
+  text-align: center;
+  overflow: hidden;
+}
+.profile-stat {
+  height: 100%;
+  width: 33.3333%;
+}
+.profile-stat:after {
+  color: #999;
+}
+.posts::after {
+  content: "Posts";
+}
+.friendss::after {
+  content: "Friends";
+}
+.followers::after {
+  content: "followers";
+}
+
+.image {
+  width: 240px;
+  height: 200px;
+  cursor: pointer;
+  margin: 0 20px 40px;
+  overflow: hidden;
+  border-radius: 5px;
+  border: 10px solid #fff;
+  box-shadow: 0 2px 6px -2px rgba(0,0,0,0.26);
+  background-color: rgba(0,0,0,0.4);
+  background-size: cover !important;
+  -webkit-transition: 0.2s cubic-bezier(0.5, 0, 0.2, 1);
+  transition: 0.2s cubic-bezier(0.5, 0, 0.2, 1);
+}
+.image:hover {
+  -webkit-transform: scale(1.06);
+          transform: scale(1.06);
+  box-shadow: 0 2px 18px -2px rgba(0,0,0,0.3);
+}
+.image.hidden {
+  height: 0;
+  width: 0px;
+  margin: 0px;
+  border: 0px solid #fff;
+}
+
+@media screen and (max-width: 1300px) {
+  .container {
+    max-width: 843px;
+  }
+  .overlay-card {
+    max-width: 803px;
+    padding: 0;
+  }
+  .overlay-image {
+    height: 68%;
+    width: 100%;
+  }
+  .overlay-desc {
+    width: 100%;
+    height: 32%;
+    margin: 0;
+    padding: 20px 40px;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .container {
+    max-width: 562px;
+  }
+  .overlay-card {
+    max-width: 522px;
+    min-width: 310px;
+  }
+  .overlay-image {
+    width: 100%;
+    height: 55%;
+    max-height: 1000px;
+    margin: 0;
+  }
+  .post-image {
+    width: 396px;
+    height: 330px;
+    border: 0px solid #fff;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    background-size: contain !important;
+  }
+  .overlay-desc {
+    width: 100%;
+    height: 45%;
+    padding: 20px;
+  }
+  .nav-links {
+    width: 0px;
+  }
+  .menu-background {
+    left: 8%;
+  }
+  .menu-card {
+    left: 2px;
+    height: 360px;
+  }
+  .menu-content .sub-nav-links {
+    height: 164px;
+    border-bottom: 1px solid #ccc;
+  }
+}
+@media screen and (max-width: 630px) {
+  .image {
+    width: calc(100% - 40px);
+    height: 0px;
+    padding-bottom: 60%;
+  }
+  .menu-content .sign-links {
+    height: 64px;
+    border-top: 1px solid #ccc;
+  }
+  .menu-card {
+    height: 425px;
+  }
+  .sign-div {
+    width: 0px;
+  }
+  .nav-search.active {
+    -webkit-transition: 0.3s cubic-bezier(0.75, 0, 0.2, 1);
+    transition: 0.3s cubic-bezier(0.75, 0, 0.2, 1);
+  }
+}
+@media screen and (max-width: 550px) {
+  .overlay-card {
+    height: 500px;
+  }
+  .post-image {
+    width: 80%;
+    max-width: 288px;
+    height: 240px;
+  }
+  .overlay-desc {
+    padding: 14px;
+  }
+  .profile-card-stats {
+    height: 0;
+    padding: 0px;
+  }
+  .profile-pic {
+    height: 140px;
+    width: 140px;
+    top: -70px;
+  }
+  .profile-card {
+    padding-top: 70px;
+    margin: 50px auto 30px;
+  }
+}
+.friends-icon{
+  color: #4287f5;
+  font-size: 40px;
+}
+.person-add-icon{
+  color: #4287f5;
+  font-size: 40px;
+}
+.friend-text{
+  font-weight: 500;
+  color: black;
+}
+.friends-btn{
+  background-color: #cccccc;
+  border-color: #cccccc;
+  color: #000;
+  font-weight: 500;
+}
+.friends-btn:hover {
+  background-color: #bfbfbf;
+  border-color: #bfbfbf;
+}
+
+
+.material-icons{
+  font-size: 30px;
+}
+.material-icons:hover{
+  cursor: pointer;
+}
+.confirm-friend-request{
+  color: green;
+}
+.confirm-friend-request:hover {
+  opacity: 0.3;
+}
+.decline-friend-request:hover {
+  opacity: 0.3;
+}
+.decline-friend-request{
+  color: red;
+}
+.message-btn-text{
+  font-weight: 500;
+}
+
+.btn{
+  cursor:pointer
+}
+.friends{
+  position:absolute;
+  top:22%;
+  z-index:1000;
+  right: 3%
+}
+.img-fit{
+  margin:0px
+}
+a{
+  color:#858796;
+  cursor:pointer
+}
+a:hover{
+  color: #224abe;
+  text-decoration: none;
+}
+.gedf-card {
+    margin-bottom: 2.0rem;
+}
+
+
+
+
+  </style>
+  <div class="container-fluid xxxx">
+    <div class="row">
+      <div class="col-12">
+
+          {% if request.user.id == id %}
+          <a href="{% url 'friend:friend_requests' user_id=id %}">
+            <button type="button" class="friends btn btn-primary m-3 justify-content-center" href=""><i class="fas fa-user-plus"></i>
+              Friend Requests <span class="badge badge-light">
+                              {% if friend_requests %}
+                                {{friend_requests|length}}
+                                {% else %}
+                                  {{ 0 }}
+                              {% endif %}
+
+                            </span>
+            </button>
+          </a>
+          {% endif %}
+
+        <div class="rela-block profile-card">
+          {% if is_friend %}
+
+          {% endif %}
+          <div class="profile-pic" id="profile_pic">
+            {% if is_friend %}
+              {% if get_online_status %}
+                <span class="indicator online indicator-position"></span>
+              {% else %}
+                <span class="indicator offline indicator-position"></span>
+              {% endif %}
+            {% endif %}
+          </div>
+          {% if is_friend %}
+              {% if get_online_status %}
+                <div class="text-center mb-2">
+                  Online
+                </div>
+              {% else %}
+                <div class="text-center mb-2">
+                  Active {{ last_login|naturaltime }}
+                </div>
+              {% endif %}
+          {% endif %}
+
+          <div class="rela-block profile-name-container">
+              <div class="rela-block user-name" id="user_name">{{ username }}</div>
+              {% if is_self %}
+                <div class="rela-block user-desc" id="user_description">{{ email }}</div>
+              {% else %}
+                  {% if hide_email %}
+                    <div class="rela-block user-desc" id="user_description">************</div>
+                  {% else %}
+                    <div class="rela-block user-desc" id="user_description">{{ email }}</div>
+                  {% endif %}
+
+              {% endif %}
+          </div>
+
+          {% if request.user.is_authenticated %}
+
+            <div class="d-flex justify-content-center">
+                {% if request_sent == 0 %}
+                <div class="toast show mb-4" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+                  <div class="toast-header">
+                    <img src="{{ profile_img.url }}" style="height:20px"class="rounded mr-2" alt="...">
+                    <strong class="mr-auto">Friend Request</strong>
+                    <small class="text-muted">{{ request_timestamp|naturaltime }}</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="toast-body">
+                    <a href="{% url 'account:profile' id %}"><strong>{{ username }}</strong></a> sent you a friend request
+
+                      <div class="d-flex justify-content-center ">
+                        <button type="button" class="btn btn-danger m-1" id="id_decline_friend_request_btn" onclick='triggerDeclineFriendRequest("{{pending_friend_request_id}}")'>Decline</button>
+                        <button type="button" class="btn btn-success m-1" onclick='triggerConfirmFriendRequest("{{pending_friend_request_id}}")'>Confirm</button>
+                      </div>
+
+
+                  </div>
+                </div>
+
+
+
+			           {% endif %}
+
+                 {% if is_friend == False and is_self == False %}
+        						<!-- You sent them a request -->
+        						{% if request_sent == 1 %}
+        							<button class="btn btn-danger m-3" id="id_cancel_friend_request_btn"><i class="fas fa-trash"></i> Cancel Friend Request</button>
+        						{% endif %}
+
+        						<!-- No requests have been sent -->
+        						{% if request_sent == -1 %}
+        							<button class="btn btn-primary m-3" id="id_send_friend_request_btn"><i class="fas fa-user-plus"></i> Add Friend</button>
+        						{% endif %}
+
+        				{% endif %}
+
+                {% if is_friend %}
+
+        						<button class="btn btn-success dropdown-toggle m-3" type="button" id="id_friends_toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        						<i class="fas fa-user-check"></i> Friends
+        						</button>
+        						<div class="dropdown-menu" aria-labelledby="id_friends_toggle">
+        							<a class="dropdown-item" href="#" id="remove_friend_btn">Unfriend</a>
+        						</div>
+        				{% endif %}
+
+
+
+
+                {% if is_friend %}
+                  <a href="{% url 'messenger' username%}" class="btn btn-primary m-3 text-light" name="message"><i class="fas fa-envelope"></i> Message</a>
+          			{% endif %}
+
+
+
+            </div>
+          {% endif %}
+
+          <div class="rela-block profile-card-stats">
+            <div class="floated profile-stat posts" id="num_works"><a href="#"><strong>{{posts|length}}</strong></a><br></div>
+            <div class="floated profile-stat friendss" id="num_followers"><a href="{% url 'friend:friend_list' user_id=id%}"><strong>{{friends|length}}</strong></a><br></div>
+            <div class="floated profile-stat followers" id="num_following"><a href="#"><strong>112</strong></a><br></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- {% if is_self %}
+      <div class="col-2 xxxx">
+        <div class="list-group" id="list-tab" role="tablist">
+          <a class="list-group-item list-group-item-action active" id="list-home-list" href="{% url 'account:profile' request.user.pk%}" role="tab" aria-controls="home">Profile</a>
+          <a class="list-group-item list-group-item-action" id="list-profile-list"  href="{% url 'password_change' %}" role="tab" aria-controls="profile">Change Password</a>
+          <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
+          <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
+        </div>
+      </div>
+      {% endif %} -->
+    </div>
+
+    <div class="container-fluid gedf-wrapper">
+        <div class="row">
+            <div class="col-md-8 gedf-main">
+
+              {% if request.user.id == id %}
+              <!--- \\\\\\\Post Form-->
+              {% include "posts/snippets/postForm.html" %}
+              <!-- Post Form /////-->
+              {% endif %}
+                <!-- Post /////-->
+
+
+              {% if is_friend or is_self or not is_private %}
+                {% if posts %}
+                <div class="infinite-container">
+                  {% for post in posts %}
+                    {% if post.1 == 'own' %}
+                    <div class="card gedf-card infinite-item">
+                      <script type="text/javascript">
+                      </script>
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="mr-2">
+                                      <a href="{{ post.0.user.get_profile_url }}">  <img class="rounded-circle" style="height:48px; width:48px" src="{{ post.0.user.profile_img.url }}" alt=""></a>
+                                    </div>
+                                    <div class="ml-2">
+                                      <a href="{{ post.0.user.get_profile_url }}"><div class="h6 m-0">{{ post.0.user.username }}</div></a>
+                                      {% if post.0.is_public %}
+                                        <i class="fas fa-globe-americas mr-2"></i>
+                                      {% elif post.0.is_private %}
+                                        <i class="fa fa-user mr-2"></i>
+                                      {% else %}
+                                        <i class="fa fa-users mr-2"></i>
+                                      {% endif %}
+                                      <span class="text-muted h7"><i class="fa fa-clock-o"></i>{{ post.0.published_date|naturaltime }}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="dropdown">
+                                      {% if post.0 not in account.bookmark.posts.all %}
+                                          <a id="bookmark-{{ post.0.id }}" href="javascript:void(0)"><i onclick="addToBookmark('{{ post.0.id }}')" class="far fa-bookmark"></i></a>
+                                        {% else %}
+                                            <a id="bookmark-{{ post.0.id }}" href="javascript:void(0)"><i onclick="removeFromBookmark('{{ post.0.id }}')" class="fas fa-bookmark"></i></a>
+                                      {% endif %}
+
+                                        <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-ellipsis-h"></i>
+                                        </button>
+
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                                            <div class="h6 dropdown-header">Settings</div>
+                                            {% if post.0.user == request.user %}<a class="dropdown-item" href="{% url 'posts:delete' post.0.id%}">Delete</a>{% endif %}
+                                            {% if post.0.user == request.user %}<a class="dropdown-item" href="{% url 'posts:update' post.0.id%}">Update</a>{% endif %}
+                                            <a href="javascript:void(0)"><button class="dropdown-item" id="copypostlink" onclick="CopyPostLink('{{ post.0.id }}')">Copy link</button></a>
+                                            <div class="d-none" id="link-post-{{ post.0.id }}">{{ post.0.get_path }}</div>
+                                            <a class="dropdown-item" href="#">Report</a>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                        <div class="card-body">
+
+
+                            <p class="card-text">
+                                {{ post.0.description }}
+                            </p>
+
+
+                        </div>
+                        {% if post.0.image %}
+                        <div class="cardbox-item img-fit">
+                          <img class="img-fluid img-fit" src="{{ post.0.image.url }}" alt="Image">
+                        </div>
+                        {% endif %}
+                        <div class="cardbox-base">
+
+                          <ul>
+
+                            {% for user in post.0.likes.all %}
+                              {% if forloop.counter <= 4 %}
+                              <li><a href="{{ user.get_profile_url }}"><img title="{{ user.username }}" src="{{ user.profile_img.url }}" class="img-fluid rounded-circle" ></a></li>
+                              {% endif %}
+                            {% endfor %}
+                           <li><a><span data-toggle="tooltip" title="{% for user in post.0.likes.all %}
+                             {{ user.username }}
+                           {% endfor %}" data-placement="right"><div class="d-inline" id="likesCount-{{post.0.id}}">{{ post.0.likes.values|length }}</div> Lik{{ post.0.likes.values|pluralize:"e,es" }}</span></a></li>
+                           <li><a><span data-toggle="tooltip" title="{% for comment in post.0.comments.all %}
+                             {{ comment.user.username }}
+                           {% endfor %}" data-placement="right">{{ post.0.comments.all|length }} Commen{{ post.0.comments.all|length|pluralize:"t,ts" }}</span></a></li>
+                           <li class="text-muted"><a ><span data-toggle="tooltip" title="{% for share in post.0.shares.all %}
+                             {{ share.user.username }}
+                           {% endfor %}" data-placement="right" class="text-muted">{{ post.0.shares.all|length }} Share{{ post.0.shares.all|pluralize }}</span></a></li>
+                          </ul>
+
+                         </div><!--/ cardbox-base -->
+                        <div class="card-footer">
+                          <div class="like-{{post.0.id}} d-inline card-link">
+                            {% if account in post.0.likes.all %}
+                            <a href="javascript:void(0)" onclick='triggerUnLike("{{post.0.id}}")' class="card-link text-primary"><i class="fa fa-gittip"></i>
+                              <i class="fa fa-thumbs-up"></i>
+                              Liked
+                            </a>
+                            {% else %}
+                              <a href="javascript:void(0)" onclick='triggerLike("{{post.0.id}}")' class="card-link"><i class="fa fa-gittip"></i>
+                                <i class="fa fa-thumbs-up"></i>
+                                Like
+                              </a>
+                            {% endif %}
+                          </div>
+                          <a href="javascript:void(0)" class="card-link"><i class="fa fa-comment"></i> Comment</a>
+                          <a href="javascript:void(0)" data-toggle="modal" data-target="#sharepost-{{ post.0.id }}" class="card-link text-right"><i class="fa fa-mail-forward"></i><i class="fa fa-share-alt"></i> Share</a>
+                          <div class="modal fade" id="sharepost-{{ post.0.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">Share Post</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <form action="{% url 'posts:share_post' post.0.id %}" method="post" enctype="multipart/form-data">
+                                  {% csrf_token %}
+                                  <div class="modal-body">
+                                  <textarea class="form-control"  rows="3" name="quote" placeholder="Say something about this.."></textarea>
+                                  </div>
+                                  <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Share</button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="comments">
+                          {% with post.0.comments.all as comments %}
+                            <div class="container">
+                              <div class="row">
+                                <div class="col-12 mt-3" id="commentsSection-{{ post.0.id }}">
+
+                                    {% for comment in comments|slice:":4" %}
+
+                                        <div class="d-flex flex-row mb-2"> <img src="{{ comment.user.profile_img.url }}" width="40" class="rounded-image">
+                                            <div class="d-flex flex-column ml-2"> <a href="{{ comment.user.get_profile_url }}"><span class="name">{{ comment.user.username }}</span></a> <strong class="comment-text">{{ comment.comment }}</strong>
+                                                <div class="d-flex flex-row align-items-center status">
+                                                  <div id="like-comment-area-{{ comment.id }}">
+                                                    <small>
+                                                    {% if account in comment.comment_likes.all %}
+                                                          <a href="javascript:void(0)" onclick='triggerUnLikeComment("{{comment.id}}")' class="card-link text-primary">
+                                                          Liked
+                                                          </a>
+                                                    {% else %}
+                                                        <a href="javascript:void(0)" onclick='triggerLikeComment("{{comment.id}}")' class="card-link">
+                                                          Like
+                                                        </a>
+                                                    {% endif %}
+                                                    </small>
+                                                  </div>
+                                                  <div>
+                                                    <small class="text-muted">{{ comment.created|naturaltime }}</small>
+                                                    <small>
+                                                      <span id="comment-likes-{{ comment.id }}">{{ comment.comment_likes.all|length }}</span>
+                                                      <i class="fas fa-heart text-danger"></i>
+                                                    </small>
+                                                  </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    {% endfor %}
+                                </div>
+                              </div>
+                              {% if comments|length >= 3 %}
+
+
+                                <div class="mt-1 mb-1">
+                                  <a onclick="LoadMore({{ post.0.id }})">load more comments...</a>
+                                  <!-- <div id="spinnerBox-{{ post.0.id }}" class="mt-1 mb-1 spinner-border text-primary spinner-border-sm display-none" role="status"></div> -->
+                                </div>
+                              {% endif %}
+                            </div>
+                            {% endwith %}
+
+                            <div class="comment-input"> <input type="text" id="comment-{{ post.0.id }}" class="form-control" placeholder="Write a comment...">
+                                <div class="fonts"> <a onclick='triggerComment("{{post.0.id}}","{{ user.username }}","{{ user.profile_img.url }}")'><i class="fas fa-paper-plane"></i></a></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if post.1 == 'shared' %}
+                    <div class="card gedf-card overflow-hidden infinite-item" >
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="mr-2">
+                                      <a href="{{ post.2.get_profile_url }}">  <img class="rounded-circle" style="height:48px; width:48px" src="{{ post.2.profile_img.url }}" alt=""></a>
+                                    </div>
+                                    <div class="ml-2">
+                                      <div class="h6 m-0 mr-2"><a href="{{ post.2.get_profile_url }}">{% if post.2.username == request.user.username %}You {% else %}{{ post.2.username }}{% endif %}</a> <span><i class="fas fa-retweet text-success"></i>  from <a  class="text-primary" href="{{ post.0.user.get_profile_url }}">{{ post.0.user.username }}</a></span></div>
+                                      {% if post.1.is_public %}
+                                        <i class="fas fa-globe-americas mr-2"></i>
+                                      {% elif post.1.is_private %}
+                                        <i class="fa fa-user mr-2"></i>
+                                      {% else %}
+                                        <i class="fa fa-users mr-2"></i>
+                                      {% endif %}
+                                      <span class="text-muted h7"><i class="fa fa-clock-o"></i>{{ post.3|naturaltime }}</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="dropdown">
+                                      {% if post.0 not in account.bookmark.posts.all %}
+                                          <a id="bookmark-{{ post.0.id }}" href="javascript:void(0)"><i onclick="addToBookmark('{{ post.0.id }}')" class="far fa-bookmark"></i></a>
+                                        {% else %}
+                                            <a id="bookmark-{{ post.0.id }}" href="javascript:void(0)"><i onclick="removeFromBookmark('{{ post.0.id }}')" class="fas fa-bookmark"></i></a>
+                                      {% endif %}
+
+                                        <button class="btn btn-link dropdown-toggle" type="button" id="gedf-drop1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fa fa-ellipsis-h"></i>
+                                        </button>
+                                        <div style="margin-top:-46px; z-index:2;"class="dropdown-menu dropdown-menu-right" aria-labelledby="gedf-drop1">
+                                            <div class="h6 dropdown-header">Settings</div>
+                                            <a href="javascript:void(0)"><button class="dropdown-item" id="copypostlink" onclick="CopyPostLink('{{ post.0.id }}')" value="{{ request.build_absolute_uri }}{{ post.0.get_path }}">Copy link</button></a>
+                                            <div class="d-none" id="link-post-{{ post.0.id }}">{{ post.0.get_path }}</div>
+                                            {% if post.2 == request.user %}<a class="dropdown-item" href="{% url 'posts:delete-shared-post' post.5%}">Delete</a>{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if post.4 %}
+                            <div class="card-body">
+                             <h6 class="dotted text-uppercase">{{ post.4 }}</h6>
+                            </div>
+                            <hr class="m-0 hr-text">
+
+                        {% endif %}
+                        <div class="card-body">
+                            <p class="card-text">
+                                {{ post.0.description }}
+                            </p>
+                        </div>
+                        {% if post.0.image %}
+                        <div class="cardbox-item img-fit">
+                          <img class="img-fluid img-fit" src="{{ post.0.image.url }}" alt="Image">
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                  {% endfor %}
+                </div>
+
+
+
+                {% else %}
+                <div class="card text-center">
+                  <div class="card-body">
+                    <h5 class="card-title text-gray-800">No Posts Yet</h5>
+                    <p class="card-text">Your friends posts will appear here.</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary"><i class="fas fa-angle-left"></i> Timeline</a>
+                  </div>
+                </div>
+                {% endif %}
+
+                <!-- Post /////-->
+              {% elif not is_friend and is_private %}
+                <div class="card text-center">
+                  <div class="card-body">
+                    <h5 class="card-title text-gray-800">This Account is Private</h5>
+                      <p class="card-text">Add this account to see their posts.</p>
+                    <a href="{% url 'home' %}" class="btn btn-primary"><i class="fas fa-angle-left"></i> Timeline</a>
+                  </div>
+                </div>
+              {% endif %}
+
+
+
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="h5"><strong>{{ username }}</strong></div>
+
+                        <div class="h7">{{ bio }}
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                          <a href="{% url 'friend:friend_list' user_id=id %}">  <div class="h6 text-muted">Friends</div></a>
+                            <div class="h5">{{friends|length}}</div>
+                        </li>
+
+                        <li class="list-group-item">Vestibulum at eros</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </div>
+
+
+
+  {% if posts.has_next%}
+    <a href="?page={{ posts.next_page_number }}" class="btn btn-outline-light mt-4 mb-4 infinite-more-link">Next</a>
+  {% endif %}
+
+
+
+
+
+
+<script type="text/javascript">
+
+  function onFriendRequestSent(){
+    location.reload();
+  }
+
+  function onFriendRequestCancel(){
+    location.reload();
+  }
+
+  function onFriendRequestDeclined(){
+    location.reload();
+  }
+
+  function onFriendRequestConfirmed(){
+    location.reload();
+  }
+
+  function onUnfriend(){
+    location.reload();
+  }
+
+  function onlike(){
+    location.reload();
+  }
+
+  function triggerDeclineFriendRequest(friend_request_id){
+
+		DeclineFriendRequest(friend_request_id, onFriendRequestDeclined)
+	}
+
+  function triggerLike(post_id){
+
+		LikePost(post_id, onlike)
+	}
+
+  function triggerConfirmFriendRequest(friend_request_id){
+
+		ConfirmFriendRequest(friend_request_id, onFriendRequestConfirmed)
+	}
+
+
+  var CancelFriendRequestBtn = document.getElementById("id_cancel_friend_request_btn")
+  if(CancelFriendRequestBtn != null){
+
+    CancelFriendRequestBtn.addEventListener("click", function(){
+      CancelFriendRequest({{id}}, onFriendRequestCancel)
+    })
+  }
+
+
+  var SendFriendRequestBtn = document.getElementById("id_send_friend_request_btn")
+  if(SendFriendRequestBtn != null){
+
+    SendFriendRequestBtn.addEventListener("click", function(){
+      SendFriendRequest({{id}}, onFriendRequestSent)
+    })
+  }
+
+  var RemoveFriendBtn = document.getElementById("remove_friend_btn")
+  if(RemoveFriendBtn != null){
+
+    RemoveFriendBtn.addEventListener("click", function(){
+      Unfriend({{id}}, onUnfriend)
+    })
+  }
+
+  var infinite = new Waypoint.Infinite({
+    element: $('.infinite-container'),
+    offset: 'bottom-in-view',
+
+    onBeforePageLoad: function () {
+      $('#spinnerBox').show();
+      $('[data-toggle="popover"]').popover()
+      $('[data-toggle="tooltip"]').tooltip()
+    },
+
+   onAfterPageLoad: function () {
+      $('#spinnerBox').hide();
+      $('[data-toggle="popover"]').popover()
+      $('[data-toggle="tooltip"]').tooltip()
+   }
+
+  });
+
+
+
+
+</script>
+
+{% include "snippets/baseJs.html" %}
+{% include "friend/snippets/send_friend_request.html" %}
+{% include "friend/snippets/cancel_friend_request.html" %}
+{% include "friend/snippets/decline_friend_request.html" %}
+{% include "friend/snippets/confirm_friend_request.html" %}
+{% include "friend/snippets/unfriend.html" %}
+
+{% endblock %}

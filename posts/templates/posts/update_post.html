@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style media="screen">
+  .h7 {
+      font-size: 0.8rem;
+  }
+
+  .gedf-wrapper {
+      margin-top: 0.97rem;
+  }
+
+  @media (min-width: 992px) {
+      .gedf-main {
+          padding-left: 3rem;
+          padding-right: 4rem;
+      }
+      .gedf-card {
+          margin-bottom: 2.0rem;
+      }
+  }
+
+  /**Reset Bootstrap*/
+  .dropdown-toggle::after {
+      content: none;
+      display: none;
+  }
+  a{
+  color:#858796;
+  cursor:pointer;
+  }
+  .gedf-card {
+    margin-bottom: 2.0rem;
+  }
+  a:hover{
+  text-decoration: none;
+  color: #224abe;
+
+  }
+  .avatar{
+  height: 3.125rem;
+  min-height: 3.125rem;
+  width: 3.125rem;
+  min-width: 3.125rem;
+  background: #2f2a30;
+  display: inline-block;
+  position: relative;
+  line-height: 0;
+  }
+  .avatar>i, .avatar>span{
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100%;
+  width: 100%;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  }
+  .icon-md{
+  font-size: 1.1875rem!important;
+  }
+  .position-relative{
+  position: relative!important;
+  }
+</style>
+<div class="card gedf-card">
+    <div class="card-header">
+        <ul class="nav nav-tabs card-header-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="posts-tab" data-toggle="tab" href="#posts" role="tab" aria-controls="posts" aria-selected="true">Make
+                    a publication</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="images-tab" data-toggle="tab" role="tab" aria-controls="images" aria-selected="false" href="#images">Images</a>
+            </li>
+        </ul>
+    </div>
+    <form  action="{% url 'posts:update' post_id %}" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div class="card-body">
+          <div class="tab-content" id="myTabContent">
+              <div class="tab-pane fade show active" id="posts" role="tabpanel" aria-labelledby="posts-tab">
+                  <div class="form-group">
+                      <label class="sr-only" for="message">post</label>
+                      <textarea class="form-control" id="message" rows="3" name="description" placeholder="What's on your mind?">{{ form.description.value }}</textarea>
+                  </div>
+
+              </div>
+              <div class="tab-pane fade" id="images" role="tabpanel" aria-labelledby="images-tab">
+                  <div class="form-group ">
+                    <div class="card m-auto" style="max-width: 30rem;" id="image_area">
+                      <img src="{% if form.image.value %}{{ form.image.value.url }}{% endif %}" class="card-img-top rounded" name="image" alt="post image" id="id_profile_image_display">
+                    </div>
+                    {% if not form.image.value %}
+                      <div id="image_info" class="text-center p-relative text-dark rounded p-6">
+                        <div class="rounded-circle avatar bg-primary text-white text-center mb-2">
+                          <i class="icon-md far fa-image"></i>
+                        </div>
+
+                          <p class="small text-muted mb-0">You can upload jpg, gif or png files. <br> Max file size 10MB.</p>
+                          <input id="upload-user-photo" class="d-none" type="file">
+                          <label class="stretched-label mb-0" for="upload-user-photo"></label>
+                      </div>
+                    {% endif %}
+
+                      <div class="custom-file mt-3">
+
+                          <input type="file" name="image" accept="image/*" class="custom-file-input" id="customFile" onchange="readURL(this)">
+                          <label class="custom-file-label" for="customFile">Upload image</label>
+                      </div>
+                  </div>
+                  <div class="py-4"></div>
+              </div>
+          </div>
+          <div class="btn-toolbar justify-content-between">
+            <div class="btn-group">
+              <select class="form-control" name="privacy" id="id_privacy">
+                <option value="public" {% if form.privacy.value == 'public' %}selected{% endif %}><i class="fa fa-globe"></i> Public</option>
+                <option value="friends" {% if form.privacy.value == 'friends' %}selected{% endif %}><i class="fa fa-users"></i> Friends</option>
+                <option value="private" {% if form.privacy.value == 'private' %}selected{% endif %}><i class="fa fa-user"></i>  Only Me</option>
+              </select>
+                <button id="btnGroupDrop1" type="button" class="btn btn-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
+                    <i class="fa fa-globe"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="btnGroupDrop1">
+                    <a class="dropdown-item" href="#" id="public" onclick='privacy_icon("public")'><i class="fa fa-globe"></i> Public</a>
+                    <a class="dropdown-item" href="#" id="friends" onclick='privacy_icon("friends")'><i class="fa fa-users"></i> Friends</a>
+                    <a class="dropdown-item" href="#" id="private" onclick='privacy_icon("private")'><i class="fa fa-user"></i> Just me</a>
+                </div>
+            </div>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">Reshare Post</button>
+            </div>
+
+          </div>
+      </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+  select = document.getElementById('id_privacy')
+  select.style.display = "none"
+  function privacy_icon(val){
+    var icon = '<i class="fa fa-globe">'
+    if(val == 'public'){
+      icon = '<i class="fa fa-globe"></i>'
+    }else if(val == 'friends'){
+      icon = '<i class="fa fa-users"></i>'
+    }else{
+      icon = '<i class="fa fa-user"></i>'
+    }
+    $('#btnGroupDrop1').html(icon)
+    $('#id_privacy').val(val);
+  }
+
+
+  function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+              var image = e.target.result
+              var image_area = document.getElementById('image_area')
+              var image_info = document.getElementById('image_info')
+              var imageField = document.getElementById('id_profile_image_display')
+                imageField.src = image
+                image_area.style.display = "block"
+                image_info.style.display = "none"
+
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    };
+
+</script>
+
+{% endblock content%}

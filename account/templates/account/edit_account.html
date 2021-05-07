@@ -1,0 +1,663 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style media="screen">
+
+.xxx{
+  display: block;
+  position: relative;
+  margin: auto;
+  top: 50px;
+  left: ;
+  right: ;
+  bottom: ;
+}
+.xxxx{
+
+  margin-top:6%;
+  padding:2px
+
+}
+.rela-block {
+  display: block;
+  position: relative;
+  margin: auto;
+  margin-bottom:100px;
+  top: ;
+  left: ;
+  right: ;
+  bottom: ;
+  border-radius:4px
+
+}
+.rela-inline {
+  display: inline-block;
+  position: relative;
+  margin: auto;
+  top: ;
+  left: ;
+  right: ;
+  bottom: ;
+}
+.floated {
+  display: inline-block;
+  position: relative;
+  margin: false;
+  top: ;
+  left: ;
+  right: ;
+  bottom: ;
+  float: left;
+}
+.floated.right {
+  float: right;
+}
+.abs-center {
+  display: false;
+  position: absolute;
+  margin: false;
+  top: 50%;
+  left: 50%;
+  right: false;
+  bottom: false;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+  text-align: center;
+  width: 88%;
+}
+.vert-center {
+  display: false;
+  position: absolute;
+  margin: false;
+  top: 50%;
+  left: ;
+  right: ;
+  bottom: ;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
+
+.profile-card {
+  width: calc(100% - 40px);
+  padding-top: 100px;
+  margin: 70px auto 30px;
+  background-color: #fff;
+  box-shadow: 0 2px 6px -2px rgba(0,0,0,0.26);
+}
+.profile-pic {
+  display: false;
+  position: absolute;
+  margin: false;
+  top: -90px;
+  left: 50%;
+  right: false;
+  bottom: false;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+  height: 180px;
+  width: 180px;
+  border: 10px solid #fff;
+  border-radius: 100%;
+  background: url({{ profile_img.url }}) center no-repeat;
+  background-size: cover;
+}
+.profile-name-container {
+  margin: 0 auto 10px;
+  padding: 10px;
+}
+.user-name {
+  font-size: 24px;
+  letter-spacing: 3px;
+  font-weight: 400;
+  line-height: 30px;
+  margin-bottom: 12px;
+}
+.user-desc {
+  letter-spacing: 1px;
+  color: #999;
+}
+.profile-card-stats {
+  height: 75px;
+  padding: 10px 0px;
+  text-align: center;
+  overflow: hidden;
+}
+.profile-stat {
+  height: 100%;
+  width: 33.3333%;
+}
+.profile-stat:after {
+  color: #999;
+}
+.works::after {
+  content: "Friends";
+}
+.followers::after {
+  content: "followers";
+}
+.following::after {
+  content: "following";
+}
+.image {
+  width: 240px;
+  height: 200px;
+  cursor: pointer;
+  margin: 0 20px 40px;
+  overflow: hidden;
+  border-radius: 5px;
+  border: 10px solid #fff;
+  box-shadow: 0 2px 6px -2px rgba(0,0,0,0.26);
+  background-color: rgba(0,0,0,0.4);
+  background-size: cover !important;
+  -webkit-transition: 0.2s cubic-bezier(0.5, 0, 0.2, 1);
+  transition: 0.2s cubic-bezier(0.5, 0, 0.2, 1);
+}
+.image:hover {
+  -webkit-transform: scale(1.06);
+          transform: scale(1.06);
+  box-shadow: 0 2px 18px -2px rgba(0,0,0,0.3);
+}
+.image.hidden {
+  height: 0;
+  width: 0px;
+  margin: 0px;
+  border: 0px solid #fff;
+}
+
+@media screen and (max-width: 1300px) {
+  .container {
+    max-width: 843px;
+  }
+  .overlay-card {
+    max-width: 803px;
+    padding: 0;
+  }
+  .overlay-image {
+    height: 68%;
+    width: 100%;
+  }
+  .overlay-desc {
+    width: 100%;
+    height: 32%;
+    margin: 0;
+    padding: 20px 40px;
+  }
+}
+@media screen and (max-width: 1000px) {
+  .container {
+    max-width: 562px;
+  }
+  .overlay-card {
+    max-width: 522px;
+    min-width: 310px;
+  }
+  .overlay-image {
+    width: 100%;
+    height: 55%;
+    max-height: 1000px;
+    margin: 0;
+  }
+  .post-image {
+    width: 396px;
+    height: 330px;
+    border: 0px solid #fff;
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    background-size: contain !important;
+  }
+  .overlay-desc {
+    width: 100%;
+    height: 45%;
+    padding: 20px;
+  }
+  .nav-links {
+    width: 0px;
+  }
+  .menu-background {
+    left: 8%;
+  }
+  .menu-card {
+    left: 2px;
+    height: 360px;
+  }
+  .menu-content .sub-nav-links {
+    height: 164px;
+    border-bottom: 1px solid #ccc;
+  }
+}
+@media screen and (max-width: 630px) {
+  .image {
+    width: calc(100% - 40px);
+    height: 0px;
+    padding-bottom: 60%;
+  }
+  .menu-content .sign-links {
+    height: 64px;
+    border-top: 1px solid #ccc;
+  }
+  .menu-card {
+    height: 425px;
+  }
+  .sign-div {
+    width: 0px;
+  }
+  .nav-search.active {
+    -webkit-transition: 0.3s cubic-bezier(0.75, 0, 0.2, 1);
+    transition: 0.3s cubic-bezier(0.75, 0, 0.2, 1);
+  }
+}
+@media screen and (max-width: 550px) {
+  .overlay-card {
+    height: 500px;
+  }
+  .post-image {
+    width: 80%;
+    max-width: 288px;
+    height: 240px;
+  }
+  .overlay-desc {
+    padding: 14px;
+  }
+  .profile-card-stats {
+    height: 0;
+    padding: 0px;
+  }
+  .profile-pic {
+    height: 140px;
+    width: 140px;
+    top: -70px;
+  }
+  .profile-card {
+    padding-top: 70px;
+    margin: 50px auto 30px;
+  }
+
+}
+.toggles{
+  margin-left:20%
+}
+
+  </style>
+  <div class="container-fluid xxx">
+    <div class="row">
+      <div class="col-12">
+        <div class="rela-block profile-card">
+
+          <div class="mb-2" id="id_image_crop_confirm">
+            <button id="id_cancel" type="button" class="btn btn-danger mt-4">Cancel</button>
+          <span id="id_confirm"></span>
+
+		  		</div>
+		  		<div class="image-container" id="id_image_container">
+              <div id="id_profile_image">
+                <img class="img-fluid mx-auto profile-pic profile-image " src="{{ request.user.profile_img.url }}" id="id_profile_image_display">
+              </div>
+    					<div class="middle" id="id_middle_container">
+    						<div class="text" id="id_text">Edit</div>
+    					</div>
+		  		</div>
+          <div class="rela-block profile-name-container">
+            <form class="user" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              <div class="row justify-content-center">
+                <div class="col-5">
+                  <div class="form-group">
+                    <input type="email" name="email" class="form-control text-center" placeholder="Email" aria-describedby="emailHelp" value="{{ form.email.value }}">
+                  </div>
+                  <div class="form-group">
+                    <input type="username" name="username" class="form-control  text-center" placeholder="Username" value="{{ form.username.value }}">
+                  </div>
+                  <div class="form-group">
+                    <input type="first_name" name="first_name" class="form-control text-center" placeholder="First Name" value="{{ form.first_name.value }}">
+                  </div>
+                  <div class="form-group">
+                    <input type="last_name" name="last_name" class="form-control text-center" placeholder="Last Name" value="{{ form.last_name.value }}">
+                  </div>
+                  <div class="form-group">
+                    <textarea type="bio" name="bio" class="form-control" rows="3" placeholder="Bio">{{ form.bio.value }}</textarea>
+                  </div>
+
+
+                  <div class="toggles">
+                    <div class="row">
+
+                      <div class="col-6">
+                        <div class="form-group d-none">
+                          <div class="custom-file col-10 small">
+                            <label class="switch">
+                            <input type="file" accept="image/*" name="profile_img" class="d-none custom-file-input" id="customFile" value="{{ form.profile_img.value }}" onchange="readURL(this)">
+                            <label class="d-none custom-file-label" for="customFile">Choose image</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-6 ">
+                        <span>Remove Image</span>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="form-group">
+                          <div class="custom-control custom-checkbox small">
+
+                            <label class="switch">
+                              <input type="checkbox" class="custom-control-input" name="profile_img-clear" id="profile_img-clear_id" >
+                              <span class="slider round" for="profile_img-clear_id"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-6">
+                        <span>Hide Email</span>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="form-group">
+                          <div class="custom-control custom-checkbox small">
+
+                            <label class="switch">
+                            <input type="checkbox" name="hide_email" class="custom-control-input"  id="hide_email" {% if form.hide_email.value %}checked{% endif %}>
+                              <span class="slider round" for="hide_email"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-6">
+                        <span>Private Account</span>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="form-group">
+                          <div class="custom-control custom-checkbox small">
+
+                            <label class="switch">
+                              <input type="checkbox" name="is_private" class="custom-control-input"  id="privateCheck" {% if form.is_private.value %}checked{% endif %}>
+                              <span class="slider round" for="privateCheck"></span>
+                          </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-6">
+                        <span>Enable Active status</span>
+                      </div>
+
+                      <div class="col-6">
+                        <div class="form-group">
+                          <div class="custom-control custom-checkbox small">
+
+                            <label class="switch">
+                              <input type="checkbox" name="active_status" class="custom-control-input"  id="activeStatus" {% if form.active_status.value %}checked{% endif %}>
+
+                              <span class="slider round" for="activeStatus"></span>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+
+                  {% for field in form %}
+
+                    {% for error in field.errors %}
+                      <small style="color:red" class="pl-3 mb-2 d-block">{{ error }}</small>
+                    {% endfor %}
+                  {% endfor %}
+
+                  {% if form.non_field_errors %}
+                    <div style="color:red">
+                      {{form.non_field_errors}}
+                    </div>
+                  {% endif %}
+                  <button class="btn btn-primary btn-block">
+                    Update
+                  </button>
+                </div>
+
+              </div>
+
+            </form>
+
+          </div>
+          <div class="rela-block profile-card-stats">
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <script type="text/javascript">
+    console.log("sdsd")
+
+    var cropper;
+    var imageFile;
+    var base64ImageString;
+    var cropX;
+    var cropX;
+    var cropWidth;
+    var cropHeight;
+
+    enableImageOverlay()
+
+    function enableImageOverlay(){
+      var text = document.getElementById("id_text")
+      text.style.backgroundColor = "#0066ff"
+      text.style.color = "white"
+      text.style.fontSize = "12px"
+      text.style.padding = "12px 24px"
+      text.style.cursor = "pointer"
+
+      var profileImage = document.getElementById("id_profile_image")
+      profileImage.style.opacity = "1"
+      profileImage.style.display = "block"
+      profileImage.style.width = "100%"
+      profileImage.style.height = "auto"
+      profileImage.style.transition = ".5s ease"
+      profileImage.style.backfaceVisibility  = "hidden"
+      profileImage.style.cursor = "pointer"
+
+      var middleContainer = document.getElementById("id_middle_container")
+      middleContainer.style.transition = ".5s ease"
+      middleContainer.style.opacity = "0"
+      middleContainer.style.position = "absolute"
+      middleContainer.style.top = "-0%"
+      middleContainer.style.left = "50%"
+      middleContainer.style.transform = "translate(-50%, -50%)"
+      middleContainer.style.textAlign = "center"
+
+      var imageContainer = document.getElementById("id_image_container")
+      imageContainer.addEventListener("mouseover", function( event ) {
+        profileImage.style.opacity = "0.3"
+        middleContainer.style.opacity = "1"
+      })
+
+      imageContainer.addEventListener("mouseout", function( event ) {
+        profileImage.style.opacity = "1"
+        middleContainer.style.opacity = "0"
+      })
+
+      imageContainer.addEventListener("click", function(event){
+        document.getElementById('customFile').click();
+      });
+
+      var cropConfirm = document.getElementById("id_image_crop_confirm")
+
+      cropConfirm.classList.add("d-none")
+
+    }
+
+    function disableImageOverlay(){
+      var profileImage = document.getElementById("id_profile_image_display")
+      var middleContainer = document.getElementById("id_middle_container")
+      var imageContainer = document.getElementById("id_image_container")
+      var text = document.getElementById("id_text")
+
+      imageContainer.removeEventListener("mouseover", function( event ) {
+        profileImage.style.opacity = "0.3"
+        middleContainer.style.opacity = "1"
+      })
+
+      imageContainer.removeEventListener("mouseout", function( event ) {
+        profileImage.style.opacity = "1"
+        middleContainer.style.opacity = "0"
+      })
+
+      profileImage.style.opacity = "1"
+      middleContainer.style.opacity = "0"
+      text.style.cursor = "default"
+      text.style.opacity = "0"
+
+      document.getElementById('id_image_container').removeEventListener("click", function(event){
+        event.preventDefault();
+        // do nothing
+      });
+      document.getElementById('id_profile_image').addEventListener("click", function(event){
+        event.preventDefault();
+        // do nothing
+      });
+
+      var cropConfirm = document.getElementById("id_image_crop_confirm")
+      cropConfirm.classList.remove("d-none")
+      cropConfirm.classList.add("d-flex")
+      cropConfirm.classList.add("flex-row")
+      cropConfirm.classList.add("justify-content-between")
+
+      var confirm = document.getElementById("id_confirm")
+      confirm.addEventListener("click", function(event){
+        console.log("Sending crop data for processing...")
+        cropImage(
+          imageFile,
+          cropX,
+          cropY,
+          cropWidth,
+          cropHeight
+        )
+      })
+
+      var cancel = document.getElementById("id_cancel")
+      cancel.style.transition = ".5s ease"
+      cancel.style.position = "relative"
+      cancel.style.left = "50%"
+      cancel.style.transform = "translate(-50%, -50%)"
+      cancel.style.textAlign = "center"
+
+      cancel.addEventListener("click", function(event){
+        console.log("Reloading window...")
+        window.location.reload();
+      })
+    }
+
+    /* return null if invalid or base64String if valid */
+    function isImageSizeValid(image){
+      console.log("max size: {{DATA_UPLOAD_MAX_MEMORY_SIZE}}")
+      // console.log(image)
+      var startIndex = image.indexOf("base64,") + 7;
+      var base64str = image.substr(startIndex);
+      var decoded = atob(base64str);
+      console.log("FileSize: " + decoded.length);
+      if(decoded.length>= "{{DATA_UPLOAD_MAX_MEMORY_SIZE}}"){
+        return null
+      }
+      return base64str
+    }
+
+    function cropImage(image, x, y, width, height){
+      base64ImageString = isImageSizeValid(image)
+
+      if(base64ImageString != null){
+        var requestData = {
+          "csrfmiddlewaretoken": "{{ csrf_token }}",
+          "image": base64ImageString,
+          "cropX": cropX,
+          "cropY": cropY,
+          "cropWidth": cropWidth,
+          "cropHeight": cropHeight
+        }
+        displayLoadingSpinner(true)
+        $.ajax({
+          type: 'POST',
+          dataType: "json",
+
+          data: requestData,
+          timeout: 10000,
+          success: function(data) {
+            if(data.result == "success"){
+              document.getElementById("id_cancel").click()
+            }
+            else if(data.result == "error"){
+              alert(data.exception)
+              document.getElementById("id_cancel").click()
+            }
+          },
+          error: function(data) {
+            console.error("ERROR...", data)
+          },
+          complete: function(data){
+            displayLoadingSpinner(false)
+          }
+        });
+      }
+      else{
+        alert("Upload an image smaller than 10 MB");
+        document.getElementById("id_cancel").click()
+      }
+    }
+
+    /*
+      Called when a new image is selected from file chooser dialog
+    */
+    function readURL(input) {
+          if (input.files && input.files[0]) {
+              var reader = new FileReader();
+
+              reader.onload = function (e) {
+                disableImageOverlay()
+                var image = e.target.result
+                var imageField = document.getElementById('id_profile_image_display')
+                  imageField.src = image
+          cropper = new Cropper(imageField, {
+            aspectRatio: 1/1,
+            crop(event) {
+              // console.log("CROP START")
+              // console.log("x: " + event.detail.x);
+              // console.log("y: " + event.detail.y);
+              // console.log("width: " + event.detail.width);
+              // console.log("height: " + event.detail.height);
+              setImageCropProperties(
+                image,
+                event.detail.x,
+                event.detail.y,
+                event.detail.width,
+                event.detail.height
+              )
+            },
+          });
+              };
+              reader.readAsDataURL(input.files[0]);
+          }
+      };
+
+      function setImageCropProperties(image, x, y, width, height){
+      imageFile = image
+      cropX = x
+      cropY = y
+      cropWidth = width
+      cropHeight = height
+    }
+
+
+  </script>
+{% endblock %}

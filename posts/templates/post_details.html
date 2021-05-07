@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block message %}
+  {% for message in messages  %}
+  <div class="toast trans" role="alert" data-autohide='false' aria-live="assertive" aria-atomic="true">
+    <div class="toast-header trans">
+      <strong class="mr-auto trans">{{ message }}</strong>
+      <button type="button" class="ml-2 mb-1 close trans" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+  {% endfor %}
+{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-12">
+      <a href="{% url 'posts:all_posts' %}" ><button class="btn btn-light trans">&larr; Go Back</button></a>
+  </div>
+</div>
+<div class="row mt-4">
+    <div class="col-sm-12 ">
+      <div class="card trans">
+        <img class="card-img-top" src="{{ post.image.url }}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">{{ post.title }}<small class="pl-2"> Written by {{post.user.username}}</small></h5>
+          <p class="card-text">{{ post.description|safe }}</p>
+          {% if post.user == request.user %}
+            <a href="{% url 'posts:update' post.slug %}"><button class="btn btn-success float-right ml-2">Edit Post</button></a>
+            <a href="{% url 'posts:delete' post.slug %}"><button class="btn btn-danger float-right ml-2">Delete Post</button></a>
+          {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mt-4">
+    <form class="form-inline" method="get" action="{{ post.add_comment }}">
+      {% csrf_token %}
+      <div class="form-group  mb-2">
+        <label class="sr-only">Comment</label>
+        <input type="text" class="mr-2 trans form-control" name="comment" placeholder="Comment">
+      </div>
+      <button type="submit" class="btn btn-primary mb-2">Add Comment</button>
+    </form>
+  </div>
+
+
+  <div class="col-md-6 mt-4 float-right">
+    <button class="btn btn-light trans float-right" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      View Comments
+    </button>
+    <div class="collapse mt-3" id="collapseExample">
+      <div class="card card-body trans">
+        {% if comments %}
+        {% for comment in comments  %}
+
+        <div class="toast" role="alert" data-autohide='false' aria-live="assertive" aria-atomic="true">
+          <div class="toast-header">
+            <img class="img-profile rounded-circle mr-2" style="width:20px" src="{% static 'imgs/img.jpg' %}">
+            <strong class="mr-auto">{% if request.user.username == comment.user.username  %} you {% else %}{{ comment.user.username }}{% endif %}</strong>
+
+            <small class="text-muted">{{ comment.created|naturaltime }}</small>
+            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+            </button>
+          </div>
+          <div class="toast-body">
+            {{ comment.comment }}
+          </div>
+        </div>
+
+
+
+
+
+        {% endfor %}
+
+        {% else %}
+        <div class="alert alert-info mt-4 trans" role="alert">
+          No comments yet!
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+{% endblock %}

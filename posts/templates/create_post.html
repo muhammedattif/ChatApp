@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% block content %}
+    <div class="container">
+      <div class="row mt-4">
+        <div class="col-md-12 background-white rounded formpos">
+          <h1>Create Post</h1>
+          <form method="POST" action="." enctype="multipart/form-data">
+              {% csrf_token %}
+              {{ form.media }}
+              {% bootstrap_form form %}
+              {% buttons %}
+                  <button class="btn btn-primary" type="submit" name="Save">Post</button>
+              {% endbuttons %}
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+{% endblock content%}

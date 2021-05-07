@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+
+  {% if friends %}
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">{{ username }} <small>Friends</small></h1>
+  </div>
+    {% for friend in friends  %}
+      <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="false">
+        <div class="toast-header p-3">
+          <img src="{{ friend.0.profile_img.url }}" class="rounded-circle mr-2" style="height:32px; width:32px" alt="...">
+          <strong class="mr-auto"><a href="{{ friend.0.get_profile_url }}">{{ friend.0|truncatechars:12 }}</a></strong>
+          {% if friend.1 %}
+            <a href="{% url 'messenger' friend.0.username %}" class="btn btn-primary" name="message"><i class="fas fa-envelope"></i> Send Message</a>
+            <!-- <button type="button" class="btn btn-danger" name="message"><i class="fas fa-envelope"></i> Unfriend</button> -->
+          {% endif %}
+          {% if friend.0 == request.user %}
+            <button type="button" class="btn btn-success">This is you</button>
+          {% endif %}
+          {% if not friend.1 and friend.0 != request.user%}
+            <a href="{{ friend.0.get_profile_url }}"><button type="button"class="btn btn-primary"><i class="fas fa-user-plus"></i> Add Friend</button></a>
+          {% endif %}
+
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% if not friends %}
+    <div class="card text-center">
+      <div class="card-body">
+        <h5 class="card-title text-gray-800">You have no friends yet</h5>
+        <p class="card-text">Your friends will appear here.</p>
+        <a href="{{ request.user.get_profile_url }}" class="btn btn-primary"><i class="fas fa-angle-left"></i> Back</a>
+      </div>
+    </div>
+  {% endif %}
+
+{% endblock %}

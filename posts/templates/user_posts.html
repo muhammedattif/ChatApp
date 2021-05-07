@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+  {% if auther %}
+    <div class="row">
+      <div class="col-md-4">
+        <form method="post" class=" my-2 my-lg-0">
+          {% csrf_token %}
+          <div class="input-group">
+            <select name="category" class="custom-select trans" id="inputGroupSelect04" aria-label="Example select with button addon">
+
+              {% for category in categories %}
+                <option value="{{ category.pk }}">{{ category }}</option>
+              {% endfor %}
+            </select>
+            <div class="input-group-append">
+              <button class="btn btn-light trans" type="submit">Filter</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  {% endif %}
+
+    <div class="row mt-4">
+    {% if all_posts.object_list %}
+      {% for post in all_posts.object_list %}
+        <div class="col-md-4">
+          <div class="card mb-3 trans shadow">
+            <img src="{{ post.image.url }}" class="card-img-top" style="height:200px" alt="...">
+            <div class="card-body">
+              <a href="{{ post.get_path }}"><h5 class="card-title">{{ post.title}}</h5></a>
+              <p class="card-text"><small class="text-muted">Written by, <a href="{% url 'posts:user_posts' post.user %}">{{ post.user.username }}</a></small></p>
+              <p class="card-text">{{ post.description|safe|truncatewords:20 }} <a href="{{ post.get_path }}"></a></p><span class="badge badge-dark shadow">{{ post.category }}</span>
+
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+      {% else %}
+        <div class="col-md-4">
+          <div class="toast" role="alert" data-autohide='false' aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+              <img class="img-profile rounded-circle mr-2" style="width:20px" src="">
+              <strong class="mr-auto">Message</strong>
+
+              <small class="text-muted">Not Found</small>
+              <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+    </div>
+      {% if all_posts.paginator.page_range %}
+        <div class="text-center m-auto">
+          {% if all_posts.has_previous%}
+            <a href="?page=1" class="btn btn-outline-light mt-4 mb-4">First</a>
+            <a href="?page={{ all_posts.previous_page_number }}" class="btn btn-outline-light mt-4 mb-4">Previous</a>
+          {% endif %}
+
+          {% for num in all_posts.paginator.page_range %}
+            {% if all_posts.number == num %}
+              <a href="?page={{ num }}" class="btn btn-light mt-4 mb-4">{{ num }}</a>
+            {% elif num > all_posts.number|add:'-3' and num < all_posts.number|add:'3' %}
+              <a href="?page={{ num }}" class="btn btn-outline-light mt-4 mb-4">{{ num }}</a>
+            {% endif %}
+          {% endfor %}
+
+          {% if  all_posts.has_next%}
+            <a href="?page={{ all_posts.next_page_number }}" class="btn btn-outline-light mt-4 mb-4">Next</a>
+            <a href="?page={{ all_posts.paginator.num_pages }}" class="btn btn-outline-light mt-4 mb-4">Last</a>
+          {% endif %}
+        {% endif %}
+        </div>
+
+{% endblock content%}

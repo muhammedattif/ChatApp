@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style media="screen">
+.card {
+    width: 400px;
+    border: none;
+    border-radius: 10px;
+    background-color: #fff
+}
+
+.stats {
+    background: #f2f5f8 !important;
+    color: #000 !important
+}
+
+.articles {
+    font-size: 10px;
+    color: #a1aab9
+}
+
+.number1 {
+    font-weight: 500
+}
+
+.followers {
+    font-size: 10px;
+    color: #a1aab9
+}
+
+.number2 {
+    font-weight: 500
+}
+
+.rating {
+    font-size: 10px;
+    color: #a1aab9
+}
+
+.number3 {
+    font-weight: 500
+}
+</style>
+    {% if accounts %}
+    <div class="container-fluid">
+      <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Search Results</h1>
+      </div>
+    </div>
+      {% for account in  accounts %}
+      <div class="container mt-5 d-flex justify-content-center">
+          <div class="card p-3">
+              <div class="d-flex align-items-center">
+                  <div class="image"> <img src="{{ account.0.profile_img.url }}" class="rounded" width="155"> </div>
+                  <div class="ml-3 w-100">
+                      <h4 class="mb-0 mt-0"><a href="{{ account.0.get_profile_url }}">{{ account.0.username }}</a></h4> <span>{{ account.0.first_name }} {{ account.0.last_name }}</span>
+                      <div class="p-2 mt-2 bg-primary d-flex justify-content-between rounded text-white stats">
+                          <div class="d-flex flex-column"> <span class="articles">Friends</span> <span class="number1">{{ account.0.friends.all|length }}</span> </div>
+                          <div class="d-flex flex-column"> <span class="followers">Posts</span> <span class="number2">{{ account.0.post_set.all|length }}</span> </div>
+                          <div class="d-flex flex-column"> <span class="rating">Rating</span> <span class="number3">8.9</span> </div>
+                      </div>
+
+                      <div class="button mt-2 d-flex flex-row align-items-center">
+                         {% if request.user == account.0 %}
+                            <button class="btn btn-sm btn-outline-primary w-100">This is you</button>
+
+                         {% elif account.1 %}
+                         <a href="{% url 'messenger' account.0.username %}" class="btn btn-sm btn-primary w-100">Message</a>
+                         <button class="btn btn-sm btn-success w-100 ml-2"><i class="fas fa-user-check"></i> Friends</button>
+                         {% else %}
+                        <a class="btn btn-sm btn-primary w-100" href="{{ account.0.get_profile_url }}">Add Friend</a>
+                         {% endif %}
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+
+    {% endfor %}
+    {% else %}
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-md-6 offset-md-3">
+          <div class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title text-gray-800"><i class="fas fa-search"></i> No results found</h5>
+                <p class="card-text">sorry, there is no friends.</p>
+              <a href="{% url 'home' %}" class="btn btn-primary"><i class="fas fa-angle-left"></i> Timeline</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+
+{% endblock %}

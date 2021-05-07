@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Icons"
+      rel="stylesheet">
+    <title>Chat App</title>
+  </head>
+  <body>
+    <style type="text/css">
+      .main{
+        min-height: 100vh;
+        height: 100%;
+        color: black
+      }
+    </style>
+    {% include "snippets/base_css.html" %}
+    {% include "snippets/base_js.html" %}
+    {% include "snippets/header.html" %}
+    <div class="main">
+      {% block content %}
+
+      {% endblock %}
+    </div>
+
+    {% include "snippets/footer.html" %}
+    <script scr="{% static 'bootstrap/js/jquery.min.js' %}"></script>
+    <script scr="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  </body>
+</html>

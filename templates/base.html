@@ -1,0 +1,352 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Chat App</title>
+
+  <!-- Custom fonts for this template-->
+  <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'cropperjs/dist/cropper.min.css' %}">
+
+
+</head>
+<style media="screen">
+
+
+  .rounded-image {
+      border-radius: 50% !important;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 48px;
+      width: 48px
+  }
+
+  .name {
+      font-weight: 600
+  }
+
+  .comment-text {
+      font-size: 12px
+  }
+
+  .status small {
+      margin-right: 10px;
+      color:#4e73df
+
+  }
+
+  .comment-input {
+      position: relative
+  }
+
+  .fonts {
+      position: absolute;
+      right: 13px;
+      top: 8px;
+      color: #a09c9c
+  }
+
+  .form-control:focus {
+      color: #495057;
+      background-color: #fff;
+      border-color: #8bbafe;
+      outline: 0;
+      box-shadow: none
+  }
+  .cardbox {
+    border-radius: 3px;
+    margin-bottom: 20px;
+    padding: 0px !important;
+  }
+
+  /* ------------------------------- */
+  /* Cardbox Heading
+  ---------------------------------- */
+  .cardbox .cardbox-heading {
+    padding: 16px;
+    margin: 0;
+  }
+  .cardbox .btn-flat.btn-flat-icon {
+   border-radius: 50%;
+   font-size: 24px;
+   height: 32px;
+   width: 32px;
+   padding: 0;
+   overflow: hidden;
+   color: #fff !important;
+   background: #b5b6b6;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  }
+  .cardbox .float-right .dropdown-menu{
+    position: relative;
+    left: 13px !important;
+  }
+  .cardbox .float-right a:hover{
+    background: #f4f4f4 !important;
+  }
+  .cardbox .float-right a.dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 4px 0px 4px 10px;
+    clear: both;
+    font-weight: 400;
+
+    font-size: 14px !important;
+    color: #848484;
+    text-align: inherit;
+    white-space: nowrap;
+    background: 0 0;
+    border: 0;
+  }
+
+
+.cardbox .cardbox-item {
+  position: relative;
+  display: block;
+}
+.cardbox .cardbox-item img{
+}
+.img-responsive{
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.cardbox-base{
+ border-bottom: 2px solid #f4f4f4;
+}
+.cardbox-base ul{
+ margin: 10px 0px 10px 15px!important;
+ padding: 10px !important;
+ font-size: 0px;
+}
+.cardbox-base li {
+  list-style: none;
+  margin: 0px 0px 0px -8px !important;
+  padding: 0px 0px 0px 0px !important;
+  display: inline-block;
+}
+
+.cardbox-base li a{
+  margin: 0px !important;
+  padding: 0px !important;
+}
+.cardbox-base li a i{
+ position: relative;
+ top: 4px;
+ font-size: 16px;
+ color: #8d8d8d;
+ margin-right: 15px;
+}
+.cardbox-base li a span{
+
+ font-size: 14px;
+ color: #8d8d8d;
+ margin-left: 20px;
+ position: relative;
+ top: 5px;
+}
+.cardbox-base li a em{
+
+ font-size: 14px;
+ color: #8d8d8d;
+ position: relative;
+ top: 3px;
+}
+.cardbox-base li a img{
+  width: 25px;
+  height: 25px;
+  margin: 0px !important;
+  border: 2px solid #fff;
+}
+
+.indicator.online {
+    background: #28B62C;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    position: relative;
+    top:83%;
+    left:79%;
+    -webkit-animation: pulse-animation 2s infinite linear;
+}
+
+@-webkit-keyframes pulse-animation {
+	0% { -webkit-transform: scale(1); }
+	25% { -webkit-transform: scale(1); }
+    50% { -webkit-transform: scale(1.2) }
+    75% { -webkit-transform: scale(1); }
+    100% { -webkit-transform: scale(1); }
+}
+.indicator.offline {
+    background: #FF4136;
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    -webkit-animation: pulse-animation 2s infinite linear;
+}
+.indicator-position{
+  position: relative;
+  top:83%;
+  left:79%;
+}
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 23px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #1cc88a;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+.imgcircle{
+  height: 2rem;
+  width: 2rem;
+}
+
+.tooltip{
+  width:150px;
+
+}
+.tooltip-inner{
+  text-align:left
+}
+</style>
+<body id="page-top">
+
+  <!-- Page Wrapper -->
+  <div id="wrapper">
+
+    {% include "snippets/side_bar.html" %}
+
+    <!-- Content Wrapper -->
+    <div id="content-wrapper" class="d-flex flex-column">
+
+      <!-- Main Content -->
+      <div id="content">
+
+        {% include "snippets/header.html" %}
+        <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+        <!-- <script src="{% static 'js/3.5.1/jquery.min.js' %}"></script> -->
+        <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+        <!-- Core plugin JavaScript-->
+        <script src="{% static 'vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+        <!-- Custom scripts for all pages-->
+        <script src="{% static 'js/sb-admin-2.min.js' %}"></script>
+
+        <!-- Page level plugins -->
+        <!-- <script src="{% static 'vendor/chart.js/Chart.min.js' %}"></script> -->
+
+        <!-- Page level custom scripts -->
+        <!-- <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
+        <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script> -->
+        <!-- <script type="module" src="{% static 'cropperjs/dis/cropper.min.js' %}" ></script> -->
+        <script src="{% static 'js/popper.min.js' %}"></script>
+        <script src="{% static 'js/main.js' %}"></script>
+        <script src="{% static 'bootstrap/js/bootstrap.min.js' %}" ></script>
+        <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+        <script src="{% static 'js/infinite.min.js' %}" ></script>
+
+
+
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+          {% block content %}
+
+          {% endblock %}
+        </div>
+        <!-- /.container-fluid -->
+
+      </div>
+      <!-- End of Main Content -->
+
+      {% include "snippets/footer.html" %}
+
+    </div>
+    <!-- End of Content Wrapper -->
+
+  </div>
+  <!-- End of Page Wrapper -->
+
+
+
+
+
+  <!-- Bootstrap core JavaScript-->
+
+
+</body>
+{% include "snippets/baseJs.html" %}
+</html>

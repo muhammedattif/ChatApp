@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+{% load static %}
+{% load humanize %}
+
+<div class="jumbotron jumbotron-fluid rounded trans mt-4">
+  <div class="container">
+    <h1 class="display-4">Comments on all Posts</h1>
+    <p class="lead">This page conatins a list of all comments on all posts.</p>
+  </div>
+</div>
+
+{% if comments %}
+{% for comment in comments  %}
+  <div class="toast" role="alert" data-autohide='false' aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <img class="img-profile rounded-circle mr-2" style="width:20px" src="{% static 'imgs/img.jpg' %}">
+      <strong class="mr-auto">{% if request.user.username == comment.user.username  %} you {% else %}{{ comment.user.username }}{% endif %}</strong>
+
+      <small class="text-muted">{{ comment.created|naturaltime }}</small>
+      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="toast-body">
+      <h6> commented on <a href="{{ comment.post.get_path }}">{{ comment.post.slug }}</a></h6>
+      {{ comment.comment }}
+    </div>
+  </div>
+{% endfor %}
+
+{% else %}
+  <div class="alert alert-info trans" role="alert">
+    No Comments yet!
+  </div>
+{% endif %}
+{% endblock %}
