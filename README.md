@@ -10,7 +10,7 @@ This is a Django social media web application.
 - Create Post
 - Update Post
 - Delete Post
-
+--------
 - Like Post
 - Share Post
 - Quote a Post
